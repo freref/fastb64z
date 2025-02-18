@@ -12,15 +12,15 @@ pub const SignedByteVector = @Vector(vec_size8, i8);
 pub const ShortVector = @Vector(vec_size16, u16);
 pub const IntVector = @Vector(vec_size32, u32);
 
-pub fn fromArray(comptime ToVector: type, from_array: []const @typeInfo(ToVector).Vector.child) ToVector {
-    assert(from_array.len >= @typeInfo(ToVector).Vector.len);
+pub fn fromArray(comptime ToVector: type, from_array: []const @typeInfo(ToVector).vector.child) ToVector {
+    assert(from_array.len >= @typeInfo(ToVector).vector.len);
 
-    return from_array[0..@typeInfo(ToVector).Vector.len].*;
+    return from_array[0..@typeInfo(ToVector).vector.len].*;
 }
 
 pub fn reinterpretSplat(comptime ToVector: type, comptime SplatType: type, splat: SplatType) ToVector {
-    const to_len = @typeInfo(ToVector).Vector.len;
-    const ToType = @typeInfo(ToVector).Vector.child;
+    const to_len = @typeInfo(ToVector).vector.len;
+    const ToType = @typeInfo(ToVector).vector.child;
 
     const splat_len = @divExact(@sizeOf(ToType) * to_len, @sizeOf(SplatType));
     const splat_vec: @Vector(splat_len, SplatType) = @splat(splat);
@@ -29,11 +29,11 @@ pub fn reinterpretSplat(comptime ToVector: type, comptime SplatType: type, splat
 }
 
 pub fn reinterpret(comptime ToVector: type, from_vector: anytype) ToVector {
-    const from_len = @typeInfo(@TypeOf(from_vector)).Vector.len;
+    const from_len = @typeInfo(@TypeOf(from_vector)).vector.len;
     const FromType = @TypeOf(from_vector[0]);
 
-    const to_len = @typeInfo(ToVector).Vector.len;
-    const ToType = @typeInfo(ToVector).Vector.child;
+    const to_len = @typeInfo(ToVector).vector.len;
+    const ToType = @typeInfo(ToVector).vector.child;
 
     assert(from_len * @sizeOf(FromType) == to_len * @sizeOf(ToType));
 
